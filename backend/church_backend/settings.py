@@ -20,9 +20,9 @@ if env_file.exists():
                 os.environ.setdefault(key.strip(), value.strip())
 
 # BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-church-cms-secret-key-change-in-production'
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+SECRET_KEY = 'kX9mP2vL8qR4tY6wZ1nB3cF5jH7sA0dE'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,14 +68,25 @@ TEMPLATES = [{
 WSGI_APPLICATION = 'church_backend.wsgi.application'
 
 # MySQL — swap to SQLite by commenting out and uncommenting below
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.environ.get('DB_NAME', 'church_cms'),
+#         'USER': os.environ.get('DB_USER', 'root'),
+#         'PASSWORD': os.environ.get('DB_PASSWORD', 'root'),
+#         'HOST': os.environ.get('DB_HOST', 'localhost'),
+#         'PORT': os.environ.get('DB_PORT', '3306'),
+#         'OPTIONS': {'charset': 'utf8mb4'},
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'church_cms'),
-        'USER': os.environ.get('DB_USER', 'root'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'root'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
+        'NAME': os.environ.get('MYSQLDATABASE', os.environ.get('DB_NAME', 'church_cms')),
+        'USER': os.environ.get('MYSQLUSER', os.environ.get('DB_USER', 'root')),
+        'PASSWORD': os.environ.get('MYSQLPASSWORD', os.environ.get('DB_PASSWORD', 'root')),
+        'HOST': os.environ.get('MYSQLHOST', os.environ.get('DB_HOST', 'localhost')),
+        'PORT': os.environ.get('MYSQLPORT', os.environ.get('DB_PORT', '3306')),
         'OPTIONS': {'charset': 'utf8mb4'},
     }
 }

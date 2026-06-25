@@ -140,8 +140,13 @@ export const donationsApi = {
 
 
 export const pledgesApi = {
+  // list: (params?: any) => api.get('/pledges/', { params }),
+  // create: (data: any) => api.post('/pledges/', data),
   list: (params?: any) => api.get('/pledges/', { params }),
+  get: (id: number) => api.get(`/pledges/${id}/`),
   create: (data: any) => api.post('/pledges/', data),
+  update: (id: number, data: any) => api.patch(`/pledges/${id}/`, data),
+  delete: (id: number) => api.delete(`/pledges/${id}/`),
 };
 
 // export const expensesApi = {

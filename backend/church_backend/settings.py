@@ -23,6 +23,9 @@ if env_file.exists():
 SECRET_KEY = 'kX9mP2vL8qR4tY6wZ1nB3cF5jH7sA0dE'
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+# ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+CSRF_TRUSTED_ORIGINS = ['https://church-cms-production-bae4.up.railway.app']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

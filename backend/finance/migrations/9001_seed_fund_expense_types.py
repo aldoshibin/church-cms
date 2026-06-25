@@ -1,12 +1,6 @@
 """
 Data migration: seed FundType / ExpenseCategory from the old hardcoded
 choices on Fund.fund_type and Expense.category.
-
-IMPORTANT: rename this file's number to come right after the
-makemigrations-generated migration that creates FundType,
-ExpenseCategory, and alters fund_type/category (e.g. if that one is
-0003_xxx.py, name this 0004_seed_fund_expense_types.py and set the
-dependency below to ('finance', '0003_xxx') instead of the placeholder).
 """
 from django.db import migrations
 
@@ -57,10 +51,9 @@ def reverse_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        # CHANGE THIS to match the migration that creates FundType,
-        # ExpenseCategory, and alters fund_type/category fields.
-        # Run `python manage.py showmigrations finance` to find it.
-        ('finance', '0001_initial'),
+        # Must run AFTER FundType/ExpenseCategory exist —
+        # 0003 is the migration that actually creates them.
+        ('finance', '0003_expensecategory_fundtype_donation_receipt_and_more'),
     ]
 
     operations = [

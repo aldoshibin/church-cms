@@ -47,6 +47,7 @@ export const authApi = {
 
 export const dashboardApi = { stats: () => api.get('/dashboard/') };
 
+
 export const membersApi = {
   list: (params?: any) => api.get('/members/', { params }),
   get: (id: number) => api.get(`/members/${id}/`),
@@ -123,19 +124,27 @@ export const ministriesApi = {
 //     delete: (id: number)            => api.delete(`/donations/${id}/`),
 //   };
 
+// export const donationsApi = {
+//     list:   (params?: any)          => api.get('/donations/', { params }),
+//     get:    (id: number)            => api.get(`/donations/${id}/`),
+//     create: (data: FormData)        => api.post('/donations/', data, {
+//       headers: { 'Content-Type': 'multipart/form-data' },
+//     }),
+//     update: (id: number, data: FormData) => api.patch(`/donations/${id}/`, data, {
+//       headers: { 'Content-Type': 'multipart/form-data' },
+//     }),
+//     delete: (id: number)            => api.delete(`/donations/${id}/`),
+//     stats: (params?: any) => api.get('/donations/stats/', { params }),
+//  };
 export const donationsApi = {
-    list:   (params?: any)          => api.get('/donations/', { params }),
-    get:    (id: number)            => api.get(`/donations/${id}/`),
-    create: (data: FormData)        => api.post('/donations/', data, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
-    update: (id: number, data: FormData) => api.patch(`/donations/${id}/`, data, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
-    delete: (id: number)            => api.delete(`/donations/${id}/`),
-    stats: (params?: any) => api.get('/donations/stats/', { params }),
- };
-
+  list: (params?: any) => api.get('/donations/', { params }),
+  get: (id: number) => api.get(`/donations/${id}/`),
+  create: (data: any) => api.post('/donations/', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  update: (id: number, data: any) => api.patch(`/donations/${id}/`, data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  delete: (id: number) => api.delete(`/donations/${id}/`),
+  summary: () => api.get('/donations/summary/'),
+  stats: (params?: any) => api.get('/donations/stats/', { params }),
+};
 
 
 

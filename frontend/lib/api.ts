@@ -186,7 +186,8 @@ export const expensesApi = {
 };
 
 export const fundsApi = {
-  list: () => api.get('/funds/'),
+  // list: () => api.get('/funds/'),
+  list: (params?: any) => api.get('/funds/', { params }),
   get: (id: number) => api.get(`/funds/${id}/`),
   create: (data: any) => api.post('/funds/', data),
   update: (id: number, data: any) => api.patch(`/funds/${id}/`, data),

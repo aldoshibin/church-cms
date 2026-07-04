@@ -64,6 +64,7 @@ export default function MemberForm({ memberId }: Props) {
   const isEdit = !!memberId;
 
   const [form,           setForm]           = useState({ ...EMPTY_FORM });
+  const [memberIdCode,   setMemberIdCode]   = useState<string>('');  // read-only, auto-assigned
   const [families,       setFamilies]       = useState<any[]>([]);
   const [saving,         setSaving]         = useState(false);
   const [loading,        setLoading]        = useState(isEdit);
@@ -111,6 +112,7 @@ export default function MemberForm({ memberId }: Props) {
           family:                  m.family != null ? String(m.family) : '',
         });
         if (m.profile_picture) setProfilePreview(m.profile_picture);
+        if (m.member_id) setMemberIdCode(m.member_id);  // capture the auto-assigned ID
         setDocuments(Array.isArray(docs) ? docs : []);
       }).catch(() => {
         toast.error('Load failed', 'Could not load member.');
@@ -154,9 +156,6 @@ export default function MemberForm({ memberId }: Props) {
       let payload: any;
 
       if (profileFile || removePhoto) {
-        // A new photo was selected, or the existing one is being removed —
-        // must send multipart/form-data so the file (or its removal) is
-        // actually included in the request.
         const fd = new FormData();
         Object.entries(fields).forEach(([k, v]) => {
           if (v === null || v === undefined) {
@@ -168,13 +167,10 @@ export default function MemberForm({ memberId }: Props) {
         if (profileFile) {
           fd.append('profile_picture', profileFile);
         } else if (removePhoto) {
-          // Explicitly clear the existing photo on the server
           fd.append('profile_picture', '');
         }
         payload = fd;
       } else {
-        // No photo change at all — plain JSON keeps existing behavior
-        // for everything else (dates, family assignment, etc.)
         payload = fields;
       }
 
@@ -261,7 +257,6 @@ export default function MemberForm({ memberId }: Props) {
         {/* ── Profile Photo ── */}
         <SectionHead title="Profile Photo" />
         <div className="p-6 flex items-center gap-6">
-          {/* Avatar circle — fixed size, overflow hidden forces image to stay inside */}
           <div
             style={{
               width: 96, height: 96, borderRadius: '50%',
@@ -288,7 +283,6 @@ export default function MemberForm({ memberId }: Props) {
             )}
           </div>
 
-          {/* Upload controls */}
           <div className="flex flex-col gap-2">
             <label className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-semibold rounded-lg border border-indigo-200 hover:bg-indigo-100 cursor-pointer transition-colors w-fit">
               <Upload size={14} /> Upload Photo
@@ -422,6 +416,25 @@ export default function MemberForm({ memberId }: Props) {
               ))}
             </>)}
           </div>
+
+          {/* Member ID — read-only, always auto-assigned, never editable */}
+          <div>
+            <FieldLabel label="Member ID" />
+            <div className="flex items-center gap-2 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg min-h-[42px]">
+              {isEdit ? (
+                memberIdCode ? (
+                  <span className="px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-bold font-mono tracking-widest">
+                    {memberIdCode}
+                  </span>
+                ) : (
+                  <span className="text-sm text-gray-400 italic">Not yet assigned</span>
+                )
+              ) : (
+                <span className="text-sm text-gray-400 italic">Auto-assigned on save</span>
+              )}
+              <span className="text-xs text-gray-400 ml-auto">(read-only)</span>
+            </div>
+          </div>
         </div>
 
         {/* ── Emergency Contact ── */}
@@ -454,7 +467,6 @@ export default function MemberForm({ memberId }: Props) {
           <>
             <SectionHead title="Documents & Certificates" />
             <div className="p-6 space-y-5">
-              {/* Upload widget */}
               <div className="border-2 border-dashed border-gray-200 rounded-xl p-5 bg-gray-50">
                 <p className="text-sm font-semibold text-gray-700 mb-4">Upload New Document</p>
                 <div className="grid grid-cols-3 gap-4 mb-4">
@@ -502,7 +514,6 @@ export default function MemberForm({ memberId }: Props) {
                 </div>
               </div>
 
-              {/* Document list */}
               {documents.length > 0 ? (
                 <div className="space-y-2">
                   <p className="text-sm font-semibold text-gray-700 mb-2">

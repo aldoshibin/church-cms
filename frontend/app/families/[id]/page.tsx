@@ -153,7 +153,7 @@ export default function FamilyDetailPage() {
         <table className="w-full">
           <thead style={{ background: '#fafbfc' }}>
             <tr>
-              {['Name', 'Email', 'Phone', 'Membership Date', 'Status'].map(h => (
+              {['Member ID', 'Name', 'Email', 'Phone', 'Membership Date', 'Status'].map(h => (
                 <th key={h} className="text-left px-5 py-2.5 text-xs font-bold uppercase tracking-wider" style={{ color: '#94a3b8' }}>
                   {h}
                 </th>
@@ -163,7 +163,7 @@ export default function FamilyDetailPage() {
           <tbody className="divide-y divide-gray-100">
             {members.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-center py-12">
+                <td colSpan={6} className="text-center py-12">
                   <div className="flex flex-col items-center gap-2 text-gray-400">
                     <UserIcon size={26} className="text-gray-200" />
                     <p className="text-sm font-medium text-gray-500">No members assigned yet</p>
@@ -171,7 +171,18 @@ export default function FamilyDetailPage() {
                 </td>
               </tr>
             ) : members.map((m: any) => (
-              <tr key={m.id} className="hover:bg-gray-50 transition-colors">
+              <tr key={m.id} className="hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={() => router.push(`/members/${m.id}`)}>
+                {/* Member ID */}
+                <td className="px-5 py-3">
+                  {m.member_id ? (
+                    <span className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold font-mono tracking-wider">
+                      {m.member_id}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-gray-300 italic">—</span>
+                  )}
+                </td>
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">

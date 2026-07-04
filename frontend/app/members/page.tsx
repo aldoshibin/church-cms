@@ -178,7 +178,7 @@ export default function MembersPage() {
         <table className="w-full">
           <thead style={{ background: '#f8fafc' }}>
             <tr>
-              {['Name', 'Email', 'Phone', 'Family', 'City', 'Membership Date', 'Status', 'Actions'].map(h => (
+              {['Member ID', 'Name', 'Email', 'Phone', 'Family', 'City', 'Membership Date', 'Status', 'Actions'].map(h => (
                 <th
                   key={h}
                   className="text-left px-5 py-3 text-xs font-bold uppercase tracking-wider whitespace-nowrap"
@@ -192,7 +192,7 @@ export default function MembersPage() {
           <tbody className="divide-y divide-gray-100">
             {loading ? (
               <tr>
-                <td colSpan={8} className="text-center py-16">
+                <td colSpan={9} className="text-center py-16">
                   <div className="flex flex-col items-center gap-2 text-gray-400">
                     <div className="w-6 h-6 border-2 border-indigo-300 border-t-indigo-600 rounded-full animate-spin" />
                     <span className="text-sm">Loading members...</span>
@@ -201,7 +201,7 @@ export default function MembersPage() {
               </tr>
             ) : members.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-16">
+                <td colSpan={9} className="text-center py-16">
                   <div className="flex flex-col items-center gap-2 text-gray-400">
                     <Search size={28} className="text-gray-200" />
                     <p className="font-medium text-gray-500">{hasActiveFilters ? 'No members match your filters' : 'No members found'}</p>
@@ -213,6 +213,16 @@ export default function MembersPage() {
               </tr>
             ) : members.map(m => (
               <tr key={m.id} className="hover:bg-gray-50 transition-colors">
+                {/* Member ID column */}
+                <td className="px-5 py-3">
+                  {m.member_id ? (
+                    <span className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold font-mono tracking-wider">
+                      {m.member_id}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-gray-300 italic">—</span>
+                  )}
+                </td>
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-3">
                     {m.profile_picture ? (

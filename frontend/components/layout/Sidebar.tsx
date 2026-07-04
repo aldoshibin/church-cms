@@ -25,7 +25,7 @@ const NAV: NavItem[] = [
     key: 'ministries', label: 'Ministries & Groups', icon: Church,
     children: [
       { label: 'All Ministries', href: '/ministries' },
-      { label: 'Add Ministry',   href: '/ministries/add' },
+      // { label: 'Add Ministry',   href: '/ministries/add' },
     ]
   },
   {
@@ -39,27 +39,9 @@ const NAV: NavItem[] = [
       { label: 'Special Event Types',href: '/events/special-event-types' },
     ]
   },
-  { key: 'attendance',    label: 'Attendance',         icon: CheckCircle,     href: '/attendance' },
-  // {
-  //   key: 'donations', label: 'Donations & Finance', icon: DollarSign,
-  //   children: [
-  //     { label: 'Funds',     href: '/funds' },
-  //     { label: 'Donations', href: '/donations' },
-  //     { label: 'Pledges',   href: '/pledges' },
-  //     { label: 'Expenses',  href: '/expenses' },
-  //   ]
-  // },
-  // {
-  // key: 'donations', label: 'Donations & Finance', icon: DollarSign,
-  // children: [
-  //   { label: 'Funds',              href: '/funds' },
-  //   { label: 'Fund Types',         href: '/funds/fund-types' },
-  //   { label: 'Donations',          href: '/donations' },
-  //   { label: 'Pledges',            href: '/pledges' },
-  //   { label: 'Expenses',           href: '/expenses' },
-  //   { label: 'Expense Categories', href: '/expenses/categories' },
-  //   ]
-  // },
+  // { key: 'attendance',    label: 'Attendance',         icon: CheckCircle,     href: '/attendance' },
+ 
+  
   {
     key: 'donations', label: 'Donations & Finance', icon: DollarSign,
     children: [
@@ -73,7 +55,7 @@ const NAV: NavItem[] = [
     ]
   },
   { key: 'communication', label: 'Communication',       icon: MessageSquare, href: '/communication' },
-  { key: 'documents',     label: 'Documents',           icon: FileText,       href: '/documents' },
+  // { key: 'documents',     label: 'Documents',           icon: FileText,       href: '/documents' },
   {
     key: 'users', label: 'Users', icon: UserCog,
     children: [

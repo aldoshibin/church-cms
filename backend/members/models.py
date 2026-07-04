@@ -11,13 +11,10 @@ class Family(models.Model):
     state = models.CharField(max_length=100, blank=True)
     zip_code = models.CharField(max_length=20, blank=True)
     phone = models.CharField(max_length=20, blank=True)
-    # email = models.EmailField(blank=True)
-    # portal_user = models.OneToOneField('core.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='family_portal')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.family_id:
-            # Auto-increment: FAM-001, FAM-002, FAM-003...
             last = Family.objects.order_by('-id').first()
             if last and last.family_id and last.family_id.startswith('FAM-'):
                 try:
@@ -27,7 +24,6 @@ class Family(models.Model):
             else:
                 num = Family.objects.count() + 1
             self.family_id = f'FAM-{num:03d}'
-            # Ensure uniqueness
             while Family.objects.filter(family_id=self.family_id).exists():
                 num += 1
                 self.family_id = f'FAM-{num:03d}'
@@ -46,6 +42,10 @@ class Member(models.Model):
     GENDER_CHOICES = [('M','Male'),('F','Female'),('O','Other')]
     MARITAL_CHOICES = [('single','Single'),('married','Married'),('widowed','Widowed'),('divorced','Divorced')]
 
+    member_id = models.CharField(
+        max_length=20, unique=True, blank=True, null=True, db_index=True,
+        help_text='Auto-generated member ID e.g. MEM-001',
+    )
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     family = models.ForeignKey(Family, on_delete=models.SET_NULL, null=True, blank=True, related_name='members')
     first_name = models.CharField(max_length=100)
@@ -63,7 +63,6 @@ class Member(models.Model):
     membership_date = models.DateField(null=True, blank=True)
     baptism_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
-    # ministry_groups = models.ManyToManyField('Ministry', blank=True)
     ministry_groups = models.ManyToManyField('Ministry', related_name='members', blank=True)
     occupation = models.CharField(max_length=200, blank=True)
     emergency_contact_name = models.CharField(max_length=200, blank=True)
@@ -76,11 +75,30 @@ class Member(models.Model):
         'core.User', on_delete=models.SET_NULL, null=True, blank=True,
         related_name='member_portal'
     )
-    # portal_user added on 18/6
+
+    def save(self, *args, **kwargs):
+        if not self.member_id:
+            # Auto-increment: MEM-001, MEM-002, MEM-003...
+            last = Member.objects.filter(
+                member_id__startswith='MEM-'
+            ).order_by('-member_id').first()
+            if last and last.member_id:
+                try:
+                    num = int(last.member_id.split('-')[1]) + 1
+                except (ValueError, IndexError):
+                    num = Member.objects.count() + 1
+            else:
+                num = Member.objects.count() + 1
+            self.member_id = f'MEM-{num:03d}'
+            # Ensure uniqueness in case of race condition
+            while Member.objects.filter(member_id=self.member_id).exists():
+                num += 1
+                self.member_id = f'MEM-{num:03d}'
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'members'
-        ordering = ['last_name', 'first_name']
+        ordering = ['-created_at']  # newest members first
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -127,18 +145,3 @@ class Ministry(models.Model):
 
     def __str__(self):
         return self.name
-
-# class Ministry(models.Model):
-#     name         = models.CharField(max_length=200)
-#     description  = models.TextField(blank=True)
-#     leader       = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True, blank=True, related_name='led_ministries')
-#     members      = models.ManyToManyField(Member, related_name='ministry_groups', blank=True)
-#     meeting_day  = models.CharField(max_length=20, blank=True)
-#     meeting_time = models.TimeField(null=True, blank=True)
-#     is_active    = models.BooleanField(default=True)
-
-#     class Meta:
-#         db_table = 'ministries'
-
-#     def __str__(self):
-#         return self.name

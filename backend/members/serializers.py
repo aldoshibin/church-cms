@@ -15,7 +15,6 @@ class MinistrySerializer(serializers.ModelSerializer):
     leader_name  = serializers.SerializerMethodField()
     members      = MinistryMemberMiniSerializer(many=True, read_only=True)
 
-    # write-only list of member IDs to assign to this ministry
     member_ids = serializers.ListField(
         child=serializers.IntegerField(),
         write_only=True,
@@ -58,15 +57,17 @@ class MinistrySerializer(serializers.ModelSerializer):
 
 
 class MemberListSerializer(serializers.ModelSerializer):
-    full_name   = serializers.ReadOnlyField()
-    family_name = serializers.SerializerMethodField()
+    full_name      = serializers.ReadOnlyField()
+    family_name    = serializers.SerializerMethodField()
     family_id_code = serializers.SerializerMethodField()
 
     class Meta:
         model  = Member
-        fields = ['id', 'full_name', 'first_name', 'last_name', 'email', 'phone',
-                  'status', 'family', 'family_name', 'family_id_code',
-                  'membership_date', 'profile_picture']
+        fields = [
+            'id', 'member_id', 'full_name', 'first_name', 'last_name',
+            'email', 'phone', 'status', 'family', 'family_name',
+            'family_id_code', 'membership_date', 'profile_picture',
+        ]
 
     def get_family_name(self, obj):
         return obj.family.name if obj.family else None
@@ -92,7 +93,8 @@ class MemberDetailSerializer(serializers.ModelSerializer):
         model  = Member
         fields = '__all__'
         extra_kwargs = {
-            'family': {'required': False, 'allow_null': True},
+            'family':     {'required': False, 'allow_null': True},
+            'member_id':  {'read_only': True},  # always auto-generated, never user-editable
         }
 
     def get_family_name(self, obj):

@@ -388,11 +388,19 @@ class FamilyViewSet(viewsets.ModelViewSet):
             'location': e.location
         } for e in upcoming]
 
+        # members_data = [{
+        #     'id': m.id, 'name': m.full_name, 'email': m.email or '',
+        #     'phone': m.phone or '', 'status': m.status,
+        #     'membership_date': str(m.membership_date) if m.membership_date else None,
+        #     'gender': m.gender
+        # } for m in members]
+
         members_data = [{
             'id': m.id, 'name': m.full_name, 'email': m.email or '',
             'phone': m.phone or '', 'status': m.status,
             'membership_date': str(m.membership_date) if m.membership_date else None,
-            'gender': m.gender
+            'gender': m.gender,
+            'member_id': m.member_id or '',
         } for m in members]
 
         trend = []

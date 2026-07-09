@@ -7,7 +7,7 @@ class MinistryMemberMiniSerializer(serializers.ModelSerializer):
 
     class Meta:
         model  = Member
-        fields = ['id', 'full_name', 'first_name', 'last_name', 'status']
+        fields = ['id', 'full_name', 'first_name', 'last_name', 'status', 'email', 'phone']
 
 
 class MinistrySerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class MemberListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'member_id', 'full_name', 'first_name', 'last_name',
             'email', 'phone', 'status', 'family', 'family_name',
-            'family_id_code', 'membership_date', 'profile_picture',
+            'family_id_code', 'membership_date', 'profile_picture','city',
         ]
 
     def get_family_name(self, obj):

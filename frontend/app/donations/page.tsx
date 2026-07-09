@@ -4,21 +4,57 @@ import { useRouter } from 'next/navigation';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { donationsApi, fundsApi } from '@/lib/api';
 import {
-  Plus, Edit2, Trash2, Search, DollarSign, FileText, Eye,
-  Download, RefreshCw, TrendingUp, Calendar
+  Plus, Edit2, Trash2, Search, DollarSign, FileText,
+  Download, RefreshCw, Calendar
 } from 'lucide-react';
 import { toast } from '@/components/ui/Toast';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import Pagination from '@/components/ui/Pagination';
 
 const METHOD_COLORS: Record<string, string> = {
-  cash: 'bg-green-100 text-green-700',
-  check: 'bg-blue-100 text-blue-700',
-  online: 'bg-purple-100 text-purple-700',
+  cash:          'bg-green-100 text-green-700',
+  check:         'bg-blue-100 text-blue-700',
+  online:        'bg-purple-100 text-purple-700',
   bank_transfer: 'bg-indigo-100 text-indigo-700',
-  upi: 'bg-amber-100 text-amber-700',
+  upi:           'bg-amber-100 text-amber-700',
 };
 
+/* ── Quick date-range helpers ──────────────────────────────────────────── */
+function isoDate(d: Date) { return d.toISOString().split('T')[0]; }
+
+const QUICK_RANGES: { label: string; from: () => string; to: () => string }[] = [
+  {
+    label: 'This Month',
+    from: () => { const d = new Date(); return isoDate(new Date(d.getFullYear(), d.getMonth(), 1)); },
+    to:   () => isoDate(new Date()),
+  },
+  {
+    label: 'Last Month',
+    from: () => { const d = new Date(); return isoDate(new Date(d.getFullYear(), d.getMonth() - 1, 1)); },
+    to:   () => { const d = new Date(); return isoDate(new Date(d.getFullYear(), d.getMonth(), 0)); },
+  },
+  {
+    label: 'Last 3 Months',
+    from: () => { const d = new Date(); d.setMonth(d.getMonth() - 3); return isoDate(d); },
+    to:   () => isoDate(new Date()),
+  },
+  {
+    label: 'This Year',
+    from: () => `${new Date().getFullYear()}-01-01`,
+    to:   () => isoDate(new Date()),
+  },
+];
+
+function formatDateLabel(date: string) {
+  if (!date) return '';
+  try {
+    return new Date(date + 'T00:00:00').toLocaleDateString('en-IN', {
+      day: 'numeric', month: 'short', year: 'numeric',
+    });
+  } catch { return date; }
+}
+
+/* ── Component ─────────────────────────────────────────────────────────── */
 export default function DonationsPage() {
   const router = useRouter();
   const [donations, setDonations] = useState<any[]>([]);
@@ -28,23 +64,31 @@ export default function DonationsPage() {
 
   // Filters
   const [search,     setSearch]     = useState('');
-  const [method,      setMethod]      = useState('');
-  const [fundFilter,  setFundFilter]  = useState('');
-  const [dateFrom,    setDateFrom]    = useState('');
-  const [dateTo,      setDateTo]      = useState('');
+  const [method,     setMethod]     = useState('');
+  const [fundFilter, setFundFilter] = useState('');
+  const [dateFrom,   setDateFrom]   = useState('');
+  const [dateTo,     setDateTo]     = useState('');
+  const [activeQuick, setActiveQuick] = useState('');
 
   // Pagination
   const [page,     setPage]     = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [count,    setCount]    = useState(0);
 
+  // Stats
+  const [stats,        setStats]        = useState({ this_month_total: 0, all_time_total: 0, count: 0 });
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  const hasDateFilter = !!(dateFrom || dateTo);
+  const hasAnyFilter  = !!(search || method || fundFilter || dateFrom || dateTo);
+
   const buildParams = (overridePageSize?: number) => {
     const params: any = { page, page_size: overridePageSize ?? pageSize };
-    if (search.trim()) params.search = search.trim();
-    if (method) params.payment_method = method;
-    if (fundFilter) params.fund = fundFilter;
-    if (dateFrom) params.date__gte = dateFrom;
-    if (dateTo) params.date__lte = dateTo;
+    if (search.trim()) params.search     = search.trim();
+    if (method)        params.payment_method = method;
+    if (fundFilter)    params.fund        = fundFilter;
+    if (dateFrom)      params.date__gte   = dateFrom;
+    if (dateTo)        params.date__lte   = dateTo;
     return params;
   };
 
@@ -53,8 +97,7 @@ export default function DonationsPage() {
     try {
       const { data } = await donationsApi.list(buildParams());
       if (Array.isArray(data)) {
-        setDonations(data);
-        setCount(data.length);
+        setDonations(data); setCount(data.length);
       } else {
         setDonations(data.results || []);
         setCount(data.count ?? (data.results || []).length);
@@ -63,27 +106,90 @@ export default function DonationsPage() {
     finally { setLoading(false); }
   };
 
-  useEffect(() => { fetchData(); }, [page, pageSize, search, method, fundFilter, dateFrom, dateTo]);
-  useEffect(() => { setPage(1); }, [search, method, fundFilter, dateFrom, dateTo]);
-
-  // Filter-aware summary stats
-  const [stats, setStats] = useState({ this_month_total: 0, all_time_total: 0, count: 0 });
-  const [statsLoading, setStatsLoading] = useState(true);
-
   const fetchStats = async () => {
     setStatsLoading(true);
     try {
-      const { search: _p, page: _pg, page_size: _ps, ...filterOnly } = buildParams();
+      const filterOnly: any = {};
+      if (method)     filterOnly.payment_method = method;
+      if (fundFilter) filterOnly.fund           = fundFilter;
+      if (dateFrom)   filterOnly.date__gte      = dateFrom;
+      if (dateTo)     filterOnly.date__lte      = dateTo;
       const { data } = await donationsApi.stats(filterOnly);
       setStats(data);
-    } catch { /* silently fall back to zeros */ }
+    } catch {}
     finally { setStatsLoading(false); }
   };
 
-  useEffect(() => { fetchStats(); }, [search, method, fundFilter, dateFrom, dateTo]);
-  useEffect(() => { fundsApi.list().then(r => setFunds(r.data.results || r.data)).catch(() => {}); }, []);
+  useEffect(() => { fetchData(); }, [page, pageSize, search, method, fundFilter, dateFrom, dateTo]);
+  useEffect(() => { setPage(1); },  [search, method, fundFilter, dateFrom, dateTo]);
+  useEffect(() => { fetchStats(); }, [method, fundFilter, dateFrom, dateTo]);
+  useEffect(() => {
+    fundsApi.list().then(r => setFunds(r.data.results || r.data)).catch(() => {});
+  }, []);
 
-  const filtered = donations; // filtering now happens server-side
+  /* ── Quick filter apply ──── */
+  const applyQuickRange = (label: string, from: string, to: string) => {
+    setDateFrom(from);
+    setDateTo(to);
+    setActiveQuick(label);
+    setPage(1);
+  };
+
+  const clearFilters = () => {
+    setSearch(''); setMethod(''); setFundFilter('');
+    setDateFrom(''); setDateTo(''); setActiveQuick('');
+    setPage(1);
+  };
+
+  /* ── Card label logic ──── */
+  const card1Label = () => {
+    if (hasDateFilter) {
+      if (dateFrom && dateTo) return `${formatDateLabel(dateFrom)} — ${formatDateLabel(dateTo)}`;
+      if (dateFrom) return `From ${formatDateLabel(dateFrom)}`;
+      if (dateTo)   return `Until ${formatDateLabel(dateTo)}`;
+    }
+    return new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+  };
+
+  const card1Value = () => {
+    // When date filter active, stats API is already filtered — use all_time_total
+    // (which respects the date range). When no date filter, use this_month_total.
+    return hasDateFilter ? stats.all_time_total : stats.this_month_total;
+  };
+
+  const card2Label = () => {
+    if (hasAnyFilter) return 'Matching filters';
+    return 'All time';
+  };
+
+  /* ── Export ──── */
+  const handleExport = async () => {
+    let exportRows = donations;
+    try {
+      const { data } = await donationsApi.list(buildParams(10000));
+      exportRows = Array.isArray(data) ? data : (data.results || []);
+    } catch {
+      toast.warning('Exporting current page only', 'Could not fetch the full filtered list.');
+    }
+    import('xlsx').then(XLSX => {
+      const rows = exportRows.map((d: any, i: number) => ({
+        '#': i + 1,
+        'Donor':          d.member_name || 'Anonymous',
+        'Fund':           d.fund_name || 'General',
+        'Amount (₹)':    Number(d.amount),
+        'Date':           d.date,
+        'Method':         d.payment_method,
+        'Transaction ID': d.transaction_id || '',
+        'Has Receipt':    d.receipt ? 'Yes' : 'No',
+        'Notes':          d.notes || '',
+      }));
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Donations');
+      XLSX.writeFile(wb, `donations_${new Date().toISOString().split('T')[0]}.xlsx`);
+      toast.success('Exported successfully');
+    }).catch(() => toast.error('Export failed'));
+  };
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -92,40 +198,10 @@ export default function DonationsPage() {
     finally { setDeleteId(null); }
   };
 
-  const handleExport = async () => {
-    // Export respects current filters but ignores pagination — fetch ALL matching rows
-    let exportRows = donations;
-    try {
-      const { data } = await donationsApi.list(buildParams(10000));
-      exportRows = Array.isArray(data) ? data : (data.results || []);
-    } catch {
-      toast.warning('Exporting current page only', 'Could not fetch the full filtered list.');
-    }
-
-    import('xlsx').then(XLSX => {
-      const rows = exportRows.map((d: any, i: number) => ({
-        '#': i + 1,
-        'Donor': d.member_name || 'Anonymous',
-        'Fund': d.fund_name || 'General',
-        'Amount (₹)': Number(d.amount),
-        'Date': d.date,
-        'Method': d.payment_method,
-        'Transaction ID': d.transaction_id || '',
-        'Has Receipt': d.receipt ? 'Yes' : 'No',
-        'Notes': d.notes || '',
-      }));
-      const ws = XLSX.utils.json_to_sheet(rows);
-      ws['!cols'] = [{ wch: 4 }, { wch: 22 }, { wch: 18 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 18 }, { wch: 10 }, { wch: 24 }];
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Donations');
-      const filename = `donations_${new Date().toISOString().split('T')[0]}.xlsx`;
-      XLSX.writeFile(wb, filename);
-      toast.success('Exported', `Saved as ${filename}`);
-    }).catch(() => toast.error('Export failed', 'Could not generate the Excel file.'));
-  };
-
   return (
     <DashboardLayout title="Donations" subtitle="Manage donation records">
+
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Donations</h1>
@@ -136,7 +212,7 @@ export default function DonationsPage() {
             className="flex items-center gap-2 border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors">
             <RefreshCw size={14} /> Refresh
           </button>
-          <button onClick={handleExport} disabled={filtered.length === 0}
+          <button onClick={handleExport} disabled={donations.length === 0}
             className="flex items-center gap-2 border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
             <Download size={14} /> Export Excel
           </button>
@@ -147,31 +223,65 @@ export default function DonationsPage() {
         </div>
       </div>
 
-      {/* Summary cards — recalculate based on current filters */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 gap-4 mb-5">
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <p className="text-sm text-gray-500 mb-1">This Month Donations</p>
+          <p className="text-sm text-gray-500 mb-1">
+            {hasDateFilter ? 'Period Donations' : 'This Month Donations'}
+          </p>
           {statsLoading ? (
-            <div className="h-9 flex items-center"><div className="w-5 h-5 border-2 border-green-200 border-t-green-600 rounded-full animate-spin" /></div>
+            <div className="h-9 flex items-center">
+              <div className="w-5 h-5 border-2 border-green-200 border-t-green-600 rounded-full animate-spin" />
+            </div>
           ) : (
-            <p className="text-3xl font-bold text-green-600">₹{stats.this_month_total.toLocaleString('en-IN')}</p>
+            <p className="text-3xl font-bold text-green-600">
+              ₹{card1Value().toLocaleString('en-IN')}
+            </p>
           )}
-          <p className="text-xs text-gray-400 mt-1">{new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}</p>
+          <p className="text-xs text-gray-400 mt-1">{card1Label()}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <p className="text-sm text-gray-500 mb-1">Total Donations</p>
           {statsLoading ? (
-            <div className="h-9 flex items-center"><div className="w-5 h-5 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" /></div>
+            <div className="h-9 flex items-center">
+              <div className="w-5 h-5 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+            </div>
           ) : (
-            <p className="text-3xl font-bold text-indigo-600">₹{stats.all_time_total.toLocaleString('en-IN')}</p>
+            <p className="text-3xl font-bold text-indigo-600">
+              ₹{stats.all_time_total.toLocaleString('en-IN')}
+            </p>
           )}
-          <p className="text-xs text-gray-400 mt-1">{search || method || fundFilter || dateFrom || dateTo ? 'matching filters' : 'all time'}</p>
+          <p className="text-xs text-gray-400 mt-1">{card2Label()}</p>
         </div>
       </div>
 
+      {/* Quick date range buttons */}
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
+        <span className="text-xs text-gray-400 font-medium">Quick range:</span>
+        {QUICK_RANGES.map(q => (
+          <button
+            key={q.label}
+            onClick={() => applyQuickRange(q.label, q.from(), q.to())}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              activeQuick === q.label
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {q.label}
+          </button>
+        ))}
+        {hasAnyFilter && (
+          <button onClick={clearFilters} className="px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+            Clear all
+          </button>
+        )}
+      </div>
+
+      {/* Table */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-100 flex items-center gap-3">
-          <div className="relative flex-1 max-w-sm">
+        <div className="p-4 border-b border-gray-100 flex items-center gap-3 flex-wrap">
+          <div className="relative flex-1 min-w-[180px] max-w-sm">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search by donor, transaction ID..."
@@ -191,20 +301,16 @@ export default function DonationsPage() {
             <option value="">All Funds</option>
             {funds.map((f: any) => <option key={f.id} value={f.id}>{f.name}</option>)}
           </select>
-          <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
-            title="From date"
-            className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-900 outline-none focus:ring-2 focus:ring-indigo-100" />
-          <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
-            title="To date"
-            className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-900 outline-none focus:ring-2 focus:ring-indigo-100" />
-          {(search || method || fundFilter || dateFrom || dateTo) && (
-            <button
-              onClick={() => { setSearch(''); setMethod(''); setFundFilter(''); setDateFrom(''); setDateTo(''); }}
-              className="text-xs text-gray-500 hover:text-gray-700 underline"
-            >
-              Clear filters
-            </button>
-          )}
+          <div className="flex items-center gap-1.5">
+            <Calendar size={13} className="text-gray-400" />
+            <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setActiveQuick(''); }}
+              title="From date"
+              className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-900 outline-none focus:ring-2 focus:ring-indigo-100" />
+            <span className="text-gray-400 text-xs">to</span>
+            <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setActiveQuick(''); }}
+              title="To date"
+              className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-900 outline-none focus:ring-2 focus:ring-indigo-100" />
+          </div>
         </div>
 
         <table className="w-full">
@@ -223,15 +329,15 @@ export default function DonationsPage() {
                   <span className="text-sm">Loading donations...</span>
                 </div>
               </td></tr>
-            ) : filtered.length === 0 ? (
+            ) : donations.length === 0 ? (
               <tr><td colSpan={7} className="text-center py-16">
                 <div className="flex flex-col items-center gap-2 text-gray-400">
                   <DollarSign size={32} className="text-gray-200" />
-                  <p className="font-medium text-gray-500">{search || method ? 'No donations match' : 'No donations yet'}</p>
-                  <p className="text-xs">{search || method ? 'Try adjusting filters.' : 'Click "Record Donation" to add the first one.'}</p>
+                  <p className="font-medium text-gray-500">{hasAnyFilter ? 'No donations match your filters' : 'No donations yet'}</p>
+                  <p className="text-xs">{hasAnyFilter ? 'Try adjusting or clearing the filters.' : 'Click "Record Donation" to add the first one.'}</p>
                 </div>
               </td></tr>
-            ) : filtered.map((d: any) => (
+            ) : donations.map((d: any) => (
               <tr key={d.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-3">
@@ -245,11 +351,8 @@ export default function DonationsPage() {
                 <td className="px-5 py-3">
                   <span className="text-sm font-bold text-green-600">₹{Number(d.amount).toLocaleString('en-IN')}</span>
                 </td>
-                <td className="px-5 py-3">
-                  <div className="flex items-center gap-1.5 text-sm text-gray-600">
-                    <Calendar size={13} className="text-gray-400" />
-                    {new Date(d.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </div>
+                <td className="px-5 py-3 text-sm text-gray-600">
+                  {new Date(d.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </td>
                 <td className="px-5 py-3">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${METHOD_COLORS[d.payment_method] || 'bg-gray-100 text-gray-600'}`}>
@@ -282,11 +385,10 @@ export default function DonationsPage() {
             ))}
           </tbody>
         </table>
+
         {!loading && donations.length > 0 && (
           <Pagination
-            page={page}
-            pageSize={pageSize}
-            count={count}
+            page={page} pageSize={pageSize} count={count}
             onPageChange={setPage}
             onPageSizeChange={(size) => { setPageSize(size); setPage(1); }}
           />
@@ -294,7 +396,8 @@ export default function DonationsPage() {
       </div>
 
       {deleteId && (
-        <ConfirmDialog title="Delete Donation" message="Are you sure you want to delete this donation record? This cannot be undone."
+        <ConfirmDialog title="Delete Donation"
+          message="Are you sure you want to delete this donation record? This cannot be undone."
           confirmLabel="Delete" onConfirm={handleDelete} onCancel={() => setDeleteId(null)} />
       )}
     </DashboardLayout>

@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { membersApi } from '@/lib/api';
+// import { membersApi } from '@/lib/api';
+import { membersApi, MEDIA_URL } from '@/lib/api';
 import { Plus, Edit2, Trash2, Search, Eye, Mail } from 'lucide-react';
 import { toast } from '@/components/ui/Toast';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
@@ -227,7 +228,8 @@ export default function MembersPage() {
                   <div className="flex items-center gap-3">
                     {m.profile_picture ? (
                       <img
-                        src={m.profile_picture}
+                        // src={m.profile_picture}
+                        src={m.profile_picture?.startsWith('http') ? m.profile_picture : `${MEDIA_URL}${m.profile_picture}`}
                         alt={m.full_name || m.first_name}
                         className="w-8 h-8 rounded-full object-cover shrink-0"
                         style={{ objectPosition: 'center' }}

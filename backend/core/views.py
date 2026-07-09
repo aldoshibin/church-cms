@@ -115,8 +115,10 @@ def dashboard_stats(request):
         event__in=last_sunday_events).count() or 352
 
     # Upcoming events
-    upcoming_events = Event.objects.filter(
-        start_datetime__gte=now, status='upcoming').order_by('start_datetime')[:5]
+    # upcoming_events = Event.objects.filter(
+    #     start_datetime__gte=now, status='upcoming').order_by('start_datetime')[:5]
+
+    upcoming_events = Event.objects.filter(start_datetime__gte=now, status__in = ['upcoming', 'scheduled']).order_by('start_datetime')[:5]
 
     from events.serializers import EventSerializer
     from finance.models import Fund

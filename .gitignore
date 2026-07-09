@@ -1,0 +1,6 @@
+backend/.env 
+backend/media/ 
+backend/**/__pycache__/ 
+"frontend/**/*page1.tsx" 
+"frontend/**/*page2.tsx" 
+"frontend/**/*2.tsx" 

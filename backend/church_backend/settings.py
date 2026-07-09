@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import timedelta
 
 
+
 # import os
 # from pathlib import Path
 
@@ -154,3 +155,20 @@ TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '')
 
 CHURCH_NAME = os.environ.get('CHURCH_NAME', 'Grace Church')
 CHURCH_CURRENCY = os.environ.get('CHURCH_CURRENCY', '₹')
+
+
+CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL', '')
+if CLOUDINARY_URL:
+    import cloudinary
+    cloudinary.config(
+        cloud_name='soazco7n',
+        api_key='969634378798199',
+        api_secret=os.environ.get('CLOUDINARY_API_SECRET', ''),
+        secure=True,
+    )
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
+
+
+
+

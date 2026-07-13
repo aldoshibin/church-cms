@@ -54,14 +54,33 @@ def send_member_credentials(member, email, phone, password):
   </div>
 </div>
 """
+    # try:
+    #     send_mail(
+    #         subject, text_body,
+    #         settings.EMAIL_HOST_USER,
+    #         [email],
+    #         html_message=html_body,
+    #         fail_silently=True 
+    #         # insially as false
+    #     )
+    #     print(f"[CHURCH CMS] Member credentials email sent to {email}")
+    # except Exception as e:
+    #     print(f"[CHURCH CMS] MEMBER EMAIL ERROR: {e}")
+
     try:
+        from django.core.mail import get_connection
+        connection = get_connection(
+            backend='django.core.mail.backends.smtp.EmailBackend',
+            fail_silently=True,
+            timeout=5,  # fail fast — don't hang for 60 seconds
+        )
         send_mail(
             subject, text_body,
             settings.EMAIL_HOST_USER,
             [email],
             html_message=html_body,
-            fail_silently=True 
-            # insially as false
+            fail_silently=True,
+            connection=connection,
         )
         print(f"[CHURCH CMS] Member credentials email sent to {email}")
     except Exception as e:

@@ -60,7 +60,8 @@ def send_member_credentials(member, email, phone, password):
             settings.EMAIL_HOST_USER,
             [email],
             html_message=html_body,
-            fail_silently=False
+            fail_silently=True 
+            # insially as false
         )
         print(f"[CHURCH CMS] Member credentials email sent to {email}")
     except Exception as e:

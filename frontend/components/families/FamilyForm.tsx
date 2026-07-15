@@ -248,8 +248,8 @@ export default function FamilyForm({ familyId }: Props) {
 
         {/* ── Address ── */}
         <SectionHead title="Address" />
-        <div className="p-6 grid grid-cols-3 gap-5">
-          <div className="col-span-3">
+        <div className="p-6 grid grid-cols-1 gap-5 md:grid-cols-3">
+          <div className="md:col-span-3">
             <FieldLabel label="Street Address" />
             <textarea value={form.address} onChange={set('address')}
               rows={2} placeholder="Street address..."

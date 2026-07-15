@@ -73,12 +73,12 @@ export default function MinistryDetailPage() {
     <DashboardLayout title="Ministry Details" subtitle={ministry.name}>
 
       {/* Top bar */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex flex-wrap justify-between items-start mb-6">
         <button onClick={() => router.push('/ministries')}
           className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
           <ArrowLeft size={15} /> Back to Ministries
         </button>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button onClick={() => router.push(`/ministries/${ministryId}/edit`)}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-sm font-semibold hover:bg-indigo-100 transition-colors">
             <Edit2 size={14} /> Edit Ministry
@@ -112,7 +112,7 @@ export default function MinistryDetailPage() {
         </div>
 
         {/* Quick facts row */}
-        <div className="grid grid-cols-4 border-t border-gray-100 divide-x divide-gray-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 border-t border-gray-100 divide-x divide-gray-100">
           <div className="p-5">
             <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Leader</p>
             {ministry.leader_name ? (
@@ -149,7 +149,7 @@ export default function MinistryDetailPage() {
       </div>
 
       {/* Members table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         <div className="p-4 border-b border-gray-100 flex items-center justify-between gap-3">
           <h3 className="font-bold text-gray-800">
             Members <span className="text-gray-400 font-normal text-sm ml-1">({filteredMembers.length})</span>

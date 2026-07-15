@@ -37,7 +37,7 @@ export default function ServiceTypesPage() {
 
   return (
     <DashboardLayout title="Service Types" subtitle="Manage Church Service event types">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Service Types</h1>
           <p className="text-gray-500 text-sm mt-1">{types.length} types defined for Church Services</p>

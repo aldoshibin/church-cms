@@ -163,7 +163,7 @@ export default function ExpensesPage() {
 
   return (
     <DashboardLayout title="Expenses" subtitle="Track church expenses">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
           <p className="text-gray-500 text-sm mt-1">{count} record{count !== 1 ? 's' : ''}</p>
@@ -193,7 +193,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* Summary cards — recalculate based on current filters */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <p className="text-sm text-gray-500 mb-1">This Month Expenses</p>
           {statsLoading ? (

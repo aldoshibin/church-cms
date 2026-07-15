@@ -202,12 +202,12 @@ export default function DonationsPage() {
     <DashboardLayout title="Donations" subtitle="Manage donation records">
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Donations</h1>
           <p className="text-gray-500 text-sm mt-1">{count} record{count !== 1 ? 's' : ''}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button onClick={fetchData}
             className="flex items-center gap-2 border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors">
             <RefreshCw size={14} /> Refresh
@@ -224,7 +224,7 @@ export default function DonationsPage() {
       </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <p className="text-sm text-gray-500 mb-1">
             {hasDateFilter ? 'Period Donations' : 'This Month Donations'}

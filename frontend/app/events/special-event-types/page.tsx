@@ -37,7 +37,7 @@ export default function SpecialEventTypesPage() {
 
   return (
     <DashboardLayout title="Special Event Types" subtitle="Manage Special Event types">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Special Event Types</h1>
           <p className="text-gray-500 text-sm mt-1">{types.length} types defined for Special Events</p>

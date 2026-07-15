@@ -38,12 +38,12 @@ export default function RolesPage() {
 
   return (
     <DashboardLayout title="Roles & Permissions" subtitle="Manage staff roles and sidebar access">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Roles & Permissions</h1>
           <p className="text-gray-500 text-sm mt-1">{roles.length} roles defined</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button onClick={fetchRoles}
             className="flex items-center gap-2 border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors">
             <RefreshCw size={14} /> Refresh

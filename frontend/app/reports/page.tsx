@@ -103,9 +103,9 @@ export default function ReportsPage() {
     <DashboardLayout title="Reports & Analytics" subtitle="Financial and membership reports">
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics </h1>
           <p className="text-gray-500 text-sm mt-1">Financial overview and membership statistics</p>
         </div>
         <button
@@ -163,7 +163,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-4 sm:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         {[
           {
             label: 'Total Donations',
@@ -215,7 +215,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Chart + Membership side by side */}
-      <div className="grid grid-cols-3 sm:grid-cols-1  gap-5 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3  gap-5 mb-6">
 
         {/* Giving Trend Chart — takes 2/3 width */}
         <div className="col-span-2  bg-white rounded-xl border border-gray-200 p-5">
@@ -305,7 +305,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Financial Detail */}
-      <div className="grid grid-cols-2 sm:grid-cols-1 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
         {/* Donation Summary */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">

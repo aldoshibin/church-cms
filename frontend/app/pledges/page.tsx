@@ -43,7 +43,7 @@ export default function PledgesPage() {
         <div><h1 className="text-2xl font-bold text-gray-900">Pledges</h1><p className="text-gray-500 text-sm mt-1">{pledges.length} pledges total</p></div>
         <button onClick={openAdd} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition-colors"><Plus size={14}/> Add Pledge</button>
       </div>
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-gray-200 p-5"><p className="text-sm text-gray-500 mb-1">Active Pledges</p><p className="text-2xl font-bold text-indigo-600">{pledges.filter(p=>p.status==='active').length}</p></div>
         <div className="bg-white rounded-xl border border-gray-200 p-5"><p className="text-sm text-gray-500 mb-1">Total Pledged (Active)</p><p className="text-2xl font-bold text-green-600">₹{totalActive.toLocaleString('en-IN')}</p></div>
         <div className="bg-white rounded-xl border border-gray-200 p-5"><p className="text-sm text-gray-500 mb-1">Fulfilled</p><p className="text-2xl font-bold text-blue-600">{pledges.filter(p=>p.status==='fulfilled').length}</p></div>

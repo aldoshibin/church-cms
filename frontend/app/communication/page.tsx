@@ -46,7 +46,7 @@ export default function CommunicationPage() {
       </div>
 
       {/* Quick send buttons */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {[
           { label: 'Send Email to All Members', icon: Mail, group: 'all', type: 'email', color: 'bg-blue-50 text-blue-700 border-blue-200' },
           { label: 'Send SMS to Active Members', icon: MessageSquare, group: 'all', type: 'sms', color: 'bg-green-50 text-green-700 border-green-200' },

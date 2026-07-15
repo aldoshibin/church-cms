@@ -469,7 +469,7 @@ export default function MemberForm({ memberId }: Props) {
             <div className="p-6 space-y-5">
               <div className="border-2 border-dashed border-gray-200 rounded-xl p-5 bg-gray-50">
                 <p className="text-sm font-semibold text-gray-700 mb-4">Upload New Document</p>
-                <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <div>
                     <FieldLabel label="Document Type" />
                     <select value={docType} onChange={e => setDocType(e.target.value)} className={inp}>

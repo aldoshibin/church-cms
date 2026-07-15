@@ -136,12 +136,12 @@ export default function FundsPage() {
   return (
     <DashboardLayout title="Funds Management" subtitle="Manage church giving funds">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Funds Management</h1>
           <p className="text-gray-500 text-sm mt-1">{count} fund{count !== 1 ? 's' : ''} total</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button onClick={fetchData}
             className="flex items-center gap-2 border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors">
             <RefreshCw size={14} /> Refresh
@@ -165,7 +165,7 @@ export default function FundsPage() {
       </div>
 
       {/* Summary cards — recalculate based on current filters */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <p className="text-sm text-gray-500 mb-1">Matching Funds</p>
           {statsLoading ? (

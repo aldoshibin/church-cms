@@ -83,7 +83,7 @@ export default function UsersPage() {
 
   return (
     <DashboardLayout title="User Management" subtitle="Manage system users and roles">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
           <p className="text-gray-500 text-sm mt-1">Control access and permissions for church staff</p>
@@ -94,7 +94,7 @@ export default function UsersPage() {
       </div>
 
       {/* Role summary cards — now driven entirely by YOUR created roles */}
-      <div className="grid grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
         {roles.slice(0, 4).map((role: any) => (
           <div key={role.id} className="bg-white rounded-xl border border-gray-200 p-4">
             <div className="flex items-center justify-between">

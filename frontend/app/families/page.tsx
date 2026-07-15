@@ -73,12 +73,12 @@ export default function FamiliesPage() {
   return (
     <DashboardLayout title="Families" subtitle="Manage church families">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Families</h1>
           <p className="text-gray-500 text-sm mt-1">{count} famil{count !== 1 ? 'ies' : 'y'} registered</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button onClick={fetchData}
             className="flex items-center gap-2 border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors">
             <RefreshCw size={14} /> Refresh
@@ -135,7 +135,7 @@ export default function FamiliesPage() {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto overflow-x-auto">
           <table className="w-full">
             <thead style={{ background: '#f8fafc' }}>
               <tr>

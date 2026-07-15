@@ -139,7 +139,7 @@ export default function ApprovalSummaryPage() {
       </div>
 
       {/* Approval history log */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         <div className="px-5 py-4 border-b border-gray-100 bg-gray-50 flex items-center gap-2">
           <History size={15} className="text-indigo-500" />
           <p className="font-bold text-gray-800">Approval Activity Log</p>

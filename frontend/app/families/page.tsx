@@ -91,7 +91,7 @@ export default function FamiliesPage() {
       </div>
 
       {/* Table card */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         {/* Legend */}
         <div className="px-4 py-2.5 border-b border-gray-100 flex items-center gap-5 text-xs text-gray-400">
           <span className="font-medium text-gray-500">Actions:</span>

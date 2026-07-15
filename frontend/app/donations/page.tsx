@@ -279,7 +279,7 @@ export default function DonationsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         <div className="p-4 border-b border-gray-100 flex items-center gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[180px] max-w-sm">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />

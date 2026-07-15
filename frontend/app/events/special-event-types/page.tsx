@@ -54,7 +54,7 @@ export default function SpecialEventTypesPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         <table className="w-full">
           <thead style={{ background: '#f8fafc' }}>
             <tr>

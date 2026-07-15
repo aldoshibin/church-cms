@@ -115,7 +115,7 @@ export default function UsersPage() {
         )}
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>{["Name","Email","Phone","Role","Actions"].map(h=>(

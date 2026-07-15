@@ -116,7 +116,7 @@ export default function MinistriesPage() {
       )}
 
       {/* Table card */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         {/* Search + filter */}
         <div className="p-4 border-b border-gray-100 flex items-center gap-3">
           <div className="relative flex-1 max-w-sm">

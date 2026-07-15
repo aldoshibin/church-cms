@@ -64,7 +64,7 @@ export default function CommunicationPage() {
       </div>
 
       {/* Message history */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         <div className="p-4 border-b border-gray-100">
           <h3 className="font-semibold text-gray-800">Message History</h3>
         </div>

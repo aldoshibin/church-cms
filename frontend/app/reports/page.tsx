@@ -163,7 +163,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-4 sm:grid-cols-2 gap-4 mb-6">
         {[
           {
             label: 'Total Donations',
@@ -215,10 +215,10 @@ export default function ReportsPage() {
       </div>
 
       {/* Chart + Membership side by side */}
-      <div className="grid grid-cols-3 gap-5 mb-6">
+      <div className="grid grid-cols-3 sm:grid-cols-1  gap-5 mb-6">
 
         {/* Giving Trend Chart — takes 2/3 width */}
-        <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+        <div className="col-span-2  bg-white rounded-xl border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-5">
             <h3 className="font-semibold text-gray-800">
               Giving Trend
@@ -305,7 +305,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Financial Detail */}
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-1 gap-5">
 
         {/* Donation Summary */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">

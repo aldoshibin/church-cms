@@ -48,7 +48,7 @@ export default function PledgesPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-5"><p className="text-sm text-gray-500 mb-1">Total Pledged (Active)</p><p className="text-2xl font-bold text-green-600">₹{totalActive.toLocaleString('en-IN')}</p></div>
         <div className="bg-white rounded-xl border border-gray-200 p-5"><p className="text-sm text-gray-500 mb-1">Fulfilled</p><p className="text-2xl font-bold text-blue-600">{pledges.filter(p=>p.status==='fulfilled').length}</p></div>
       </div>
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         <div className="p-4 border-b border-gray-100 flex gap-3">
           <select value={filterStatus} onChange={e=>setFilterStatus(e.target.value)} className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-40">
             <option value="">All Status</option><option value="active">Active</option><option value="fulfilled">Fulfilled</option><option value="cancelled">Cancelled</option>

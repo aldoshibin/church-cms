@@ -303,7 +303,7 @@ export default function MemberForm({ memberId }: Props) {
 
         {/* ── Personal Information ── */}
         <SectionHead title="Personal Information" />
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
           <div>
             <FieldLabel label="First Name" required />
             {getInput('first_name', { required: true, placeholder: 'John' })}
@@ -345,7 +345,7 @@ export default function MemberForm({ memberId }: Props) {
 
         {/* ── Contact Details ── */}
         <SectionHead title="Contact Details" />
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
           <div>
             <FieldLabel label="Email Address" />
             {getInput('email', { type: 'email', placeholder: 'john@email.com' })}
@@ -359,7 +359,7 @@ export default function MemberForm({ memberId }: Props) {
             <FieldLabel label="Alternate Phone" />
             {getInput('alternate_phone', { placeholder: '+91 98765 43210' })}
           </div>
-          <div className="col-span-3">
+          <div className="grid grid-cols-1 md:grid-cols-3">
             <FieldLabel label="Address" />
             <textarea
               value={form.address}
@@ -386,7 +386,7 @@ export default function MemberForm({ memberId }: Props) {
 
         {/* ── Church Information ── */}
         <SectionHead title="Church Information" />
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
           <div>
             <FieldLabel label="Membership Status" />
             {getSelect('status', <>
@@ -439,7 +439,7 @@ export default function MemberForm({ memberId }: Props) {
 
         {/* ── Emergency Contact ── */}
         <SectionHead title="Emergency Contact" />
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
           <div>
             <FieldLabel label="Contact Name" />
             {getInput('emergency_contact_name', { placeholder: 'Full name' })}
